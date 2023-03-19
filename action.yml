@@ -21,7 +21,10 @@ inputs:
     type: boolean
     required: false
     default: true 
-
+  force:
+    description: "Run the package manager with --force"
+    required: false
+    default: false
 runs:
   using: composite
   steps:
@@ -70,10 +73,17 @@ runs:
 
     - name: Install
       shell: "bash"
+      if: inputs.force == true 
+      run: |
+        cd ${{ inputs.path }}
+        $PACKAGE_MANAGER install --force
+
+    - name: Install
+      shell: "bash"
+      if: inputs.force == false 
       run: |
         cd ${{ inputs.path }}
         $PACKAGE_MANAGER install
-
     - name: Build
       shell: "bash"
       run: |
